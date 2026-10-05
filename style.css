@@ -59,23 +59,23 @@ img { display: block; max-width: 100%; height: auto; }
 p { text-wrap: pretty; }
 
 /* Small glyphs after links: ↗ leaves the site, ▸ plays a video.
-   Drawn as masks so they never turn into emoji. */
+   Drawn as masks over non-breaking spaces, so they keep the link colour,
+   never turn into emoji and never wrap onto a line of their own. */
 .ext::after,
 .play::after {
-  content: "";
-  display: inline-block;
-  width: 0.62em;
-  height: 0.62em;
-  margin-left: 0.2em;
-  vertical-align: 0.02em;
+  content: "\00a0\00a0\00a0";
+  letter-spacing: 0;
   background: currentColor;
   opacity: 0.8;
-  -webkit-mask: var(--glyph) center / contain no-repeat;
-  mask: var(--glyph) center / contain no-repeat;
+  -webkit-mask: var(--glyph) right 0.02em center / 0.62em no-repeat;
+  mask: var(--glyph) right 0.02em center / 0.62em no-repeat;
 }
 .ext { --glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M2 1h7v7M9 1 1 9' fill='none' stroke='black' stroke-width='1.1'/%3E%3C/svg%3E"); }
 .play { --glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M2 1v8l7-4z'/%3E%3C/svg%3E"); }
-.play::after { width: 0.5em; height: 0.5em; margin-left: 0.35em; vertical-align: 0.06em; }
+.play::after {
+  -webkit-mask-size: 0.5em;
+  mask-size: 0.5em;
+}
 
 /* Header */
 
@@ -114,7 +114,17 @@ p { text-wrap: pretty; }
 .social a:hover { color: var(--ink); }
 .social svg { display: block; width: 1.35rem; height: 1.35rem; }
 
-/* Home: three columns */
+/* Home: intro line, then three columns */
+
+.intro {
+  margin: 1.6rem 0 0;
+  text-wrap: balance;
+  padding: 0 var(--pad);
+  font-size: 1.2rem;
+  line-height: 1.45;
+  letter-spacing: 0.06em;
+  color: var(--title);
+}
 
 .columns {
   display: grid;
@@ -298,6 +308,7 @@ dialog.player .close:focus-visible { outline-color: #fff; }
   .site-header { padding-top: 1.1rem; }
   .site-header h1 { font-size: 3rem; }
   .social { padding-top: 0.15rem; }
+  .intro { margin-top: 1.2rem; }
   .columns { grid-template-columns: 1fr; padding-top: 1.6rem; }
   .columns > div + div { margin-top: 1.1rem; }
   .project .split,
